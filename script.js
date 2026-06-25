@@ -215,9 +215,9 @@ function initCountUp() {
   nums.forEach(n => obs.observe(n));
 }
 
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY  = 'B2afaPCHJ9Tz8zUpr';
+const EMAILJS_SERVICE_ID  = 'service_4min7ud';
+const EMAILJS_TEMPLATE_ID = 'service_4min7ud';
 
 function initEmailJS() {
   if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
