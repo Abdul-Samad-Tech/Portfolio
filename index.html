@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abdul Samad — Developer Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { DEFAULT: '#0A0F1E', 800: '#0D1426', 700: '#111B33', 600: '#162040', 500: '#1E2A4A' },
+            cyan: { DEFAULT: '#00E5FF', 400: '#33ECFF', 300: '#66F0FF' },
+            slate: { DEFAULT: '#8892A4', 400: '#A0ACBC', 300: '#B8C2D0' },
+          },
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0F1E;
+      color: #F0F4FF;
+      overflow-x: hidden;
+    }
+    body.loading { overflow: hidden; }
+
+    /* =============================================
+       LOADER 1 — FULLSCREEN INTRO SPLASH
+    ============================================= */
+    #loader-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #050810;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      transition: opacity 0.7s ease, visibility 0.7s ease;
+    }
+    #loader-splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .splash-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      animation: logo-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .splash-logo span { color: #00E5FF; text-shadow: 0 0 30px rgba(0,229,255,0.7); }
+    @keyframes logo-pop {
+      from { opacity:0; transform: scale(0.7) translateY(20px); }
+      to   { opacity:1; transform: scale(1)   translateY(0); }
+    }
+
+    /* Progress bar */
+    .splash-bar-wrap {
+      width: 220px;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .splash-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #00E5FF, #0099bb);
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 10px rgba(0,229,255,0.6);
+    }
+
+    .splash-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: rgba(0,229,255,0.5);
+      text-transform: uppercase;
+      animation: fade-pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes fade-pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+    /* Orbiting dots */
+    .splash-orbit {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin-bottom: 8px;
+    }
+    .splash-orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(0,229,255,0.12);
+      animation: orbit-spin 3s linear infinite;
+    }
+    .splash-orbit-ring::after {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #00E5FF;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px rgba(0,229,255,0.5);
+    }
+    .splash-orbit-ring:nth-child(2) {
+      inset: 12px;
+      animation-duration: 2s;
+      animation-direction: reverse;
+      border-color: rgba(0,229,255,0.2);
+    }
+    .splash-orbit-ring:nth-child(2)::after { background: #fff; box-shadow: 0 0 8px #fff; width:5px;height:5px; }
+    .splash-center-dot {
+      position: absolute;
+      top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      width: 14px; height: 14px;
+      background: #00E5FF;
+      border-radius: 50%;
+      box-shadow: 0 0 16px #00E5FF, 0 0 32px rgba(0,229,255,0.4);
+    }
+    @keyframes orbit-spin { to { transform: rotate(360deg); } }
+
+    /* =============================================
+       LOADER 2 — SECTION SKELETON SHIMMER
+    ============================================= */
+    .skeleton {
+      background: linear-gradient(90deg, #111B33 25%, #162040 50%, #111B33 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+    #skeleton-screen {
+      display: none;
+      padding: 80px 24px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    #skeleton-screen.show { display: block; }
+
+    /* =============================================
+       HERO BG — Animated grid + floating orbs
+    ============================================= */
+    .hero-grid {
+      background-image:
+        linear-gradient(rgba(0,229,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Floating glowing orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      animation: orb-float 8s ease-in-out infinite;
+    }
+    .orb-1 { width:420px;height:420px; background:rgba(0,229,255,0.06); top:-100px; right:-80px; animation-delay:0s; }
+    .orb-2 { width:280px;height:280px; background:rgba(0,100,255,0.05); bottom:60px; left:-60px; animation-delay:-3s; }
+    .orb-3 { width:200px;height:200px; background:rgba(0,229,255,0.04); top:40%; left:30%; animation-delay:-5s; }
+    @keyframes orb-float {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-30px) scale(1.05); }
+    }
+
+    /* Particle canvas */
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(10,15,30,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,229,255,0.07);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    #navbar.scrolled {
+      background: rgba(10,15,30,0.96);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+
+    .nav-link {
+      color: #8892A4;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+      position: relative;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1.5px;
+      background: #00E5FF;
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .nav-link:hover, .nav-link.active { color: #00E5FF; }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+    /* Progress bar at top of page */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #00E5FF, #0099bb);
+      z-index: 10001;
+      width: 0%;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px rgba(0,229,255,0.6);
+    }
+
+    /* =============================================
+       TYPOGRAPHY & SECTIONS
+    ============================================= */
+    .section-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #00E5FF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+    }
+    .text-glow { text-shadow: 0 0 24px rgba(0,229,255,0.5); }
+
+    /* =============================================
+       HERO — Animated text reveal
+    ============================================= */
+    .hero-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: reveal-up 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-reveal:nth-child(1) { animation-delay: 0.1s; }
+    .hero-reveal:nth-child(2) { animation-delay: 0.25s; }
+    .hero-reveal:nth-child(3) { animation-delay: 0.4s; }
+    .hero-reveal:nth-child(4) { animation-delay: 0.55s; }
+    .hero-reveal:nth-child(5) { animation-delay: 0.7s; }
+    @keyframes reveal-up {
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    /* Avatar */
+    .avatar-ring {
+      border: 2px solid rgba(0,229,255,0.3);
+      animation: ring-pulse 4s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+      0%,100% { box-shadow: 0 0 30px rgba(0,229,255,0.15); border-color: rgba(0,229,255,0.3); }
+      50%      { box-shadow: 0 0 55px rgba(0,229,255,0.35); border-color: rgba(0,229,255,0.55); }
+    }
+
+    /* Cursor blink */
+    .cursor {
+      display: inline-block;
+      width: 3px; height: 1.1em;
+      background: #00E5FF;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* Status badge */
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #00E5FF;
+      box-shadow: 0 0 8px #00E5FF;
+      animation: dot-pulse 2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%,100% { box-shadow: 0 0 6px #00E5FF; }
+      50%      { box-shadow: 0 0 16px #00E5FF, 0 0 30px rgba(0,229,255,0.4); }
+    }
+
+    /* =============================================
+       SCROLL ANIMATIONS
+    ============================================= */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    .fade-left  { opacity:0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-right { opacity:0; transform: translateX( 40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-left.visible, .fade-right.visible { opacity:1; transform: translateX(0); }
+
+    .stagger-child {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .stagger-child.visible { opacity: 1; transform: translateY(0); }
+
+    /* =============================================
+       CARDS
+    ============================================= */
+    .card-border {
+      border: 1px solid rgba(0,229,255,0.1);
+      transition: border-color 0.35s, box-shadow 0.35s;
+    }
+    .card-border:hover {
+      border-color: rgba(0,229,255,0.38);
+      box-shadow: 0 0 24px rgba(0,229,255,0.1);
+    }
+
+    /* Stat number counter animation */
+    .stat-number { transition: all 0.4s; }
+
+    /* =============================================
+       SKILLS
+    ============================================= */
+    .skill-pill {
+      background: #162040;
+      border: 1px solid rgba(0,229,255,0.13);
+      border-radius: 9px;
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      color: #B8C2D0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: default;
+    }
+    .skill-pill:hover {
+      border-color: #00E5FF;
+      color: #00E5FF;
+      background: #0D1426;
+      box-shadow: 0 0 18px rgba(0,229,255,0.14), 0 4px 16px rgba(0,0,0,0.3);
+      transform: translateY(-3px) scale(1.02);
+    }
+    .skill-dot { width: 6px; height: 6px; border-radius: 50%; background: #00E5FF; flex-shrink: 0; }
+
+    /* =============================================
+       PROJECTS
+    ============================================= */
+    .project-card {
+      background: #111B33;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0,229,255,0.1);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+      position: relative;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,229,255,0.03) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .project-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 50px rgba(0,229,255,0.12); }
+    .project-card:hover::before { opacity: 1; }
+
+    /* Project image placeholder animation */
+    .project-thumb {
+      position: relative;
+      overflow: hidden;
+    }
+    .project-thumb .icon-wrap {
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .project-card:hover .icon-wrap { transform: scale(1.15) rotate(-5deg); }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn-primary {
+      background: #00E5FF;
+      color: #0A0F1E;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      border-radius: 10px;
+      padding: 13px 28px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: box-shadow 0.25s, transform 0.2s, background 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 28px rgba(0,229,255,0.5);
+      transform: translateY(-2px);
+      background: #33ECFF;
+    }
+    .btn-primary:active { transform: translateY(0) scale(0.98); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .btn-outline {
+      border: 1px solid rgba(0,229,255,0.4);
+      color: #00E5FF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      border-radius: 10px;
+      padding: 13px 28px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+      cursor: pointer;
+      background: transparent;
+    }
+    .btn-outline:hover {
+      background: rgba(0,229,255,0.07);
+      box-shadow: 0 0 22px rgba(0,229,255,0.18);
+      transform: translateY(-2px);
+    }
+
+    /* =============================================
+       CONTACT
+    ============================================= */
+    .contact-input {
+      background: #111B33;
+      border: 1px solid rgba(0,229,255,0.13);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #F0F4FF;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+    .contact-input:focus {
+      border-color: #00E5FF;
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.09);
+    }
+    .contact-input::placeholder { color: #3A4558; }
+
+    /* =============================================
+       TOAST
+    ============================================= */
+    #toast {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 9999;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      max-width: 320px;
+    }
+    #toast.show   { opacity:1; transform: translateY(0); }
+    #toast.success{ background:#0a2e1a; border:1px solid rgba(0,255,128,0.25); color:#4fffaa; }
+    #toast.error  { background:#2e0a0a; border:1px solid rgba(255,80,80,0.25);  color:#ff7070; }
+
+    /* =============================================
+       MISC
+    ============================================= */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0A0F1E; }
+    ::-webkit-scrollbar-thumb { background: #1E2A4A; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,229,255,0.3); }
+
+    #mobile-menu { transition: max-height 0.35s ease, opacity 0.35s ease; }
+
+    /* Animated underline on section headings */
+    .heading-line {
+      display: inline-block;
+      position: relative;
+    }
+    .heading-line::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0;
+      width: 48px; height: 2px;
+      background: #00E5FF;
+      border-radius: 99px;
+      box-shadow: 0 0 8px rgba(0,229,255,0.6);
+    }
+
+    /* Floating code snippets decoration */
+    .code-deco {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.72rem;
+      color: rgba(0,229,255,0.2);
+      position: absolute;
+      white-space: nowrap;
+      animation: code-float 6s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+    @keyframes code-float {
+      0%,100% { transform: translateY(0); opacity: 0.2; }
+      50%      { transform: translateY(-12px); opacity: 0.4; }
+    }
+
+    /* Count up numbers */
+    @keyframes count-up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,0.15), transparent);
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body class="loading">
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+
+<!-- ============================================================
+     LOADER 1 — FULLSCREEN SPLASH
+============================================================ -->
+<div id="loader-splash">
+  <div class="splash-orbit">
+    <div class="splash-orbit-ring"></div>
+    <div class="splash-orbit-ring"></div>
+    <div class="splash-center-dot"></div>
+  </div>
+
+  <div class="splash-logo"><span>AS</span></div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div class="splash-bar-wrap">
+      <div class="splash-bar" id="splash-bar"></div>
+    </div>
+    <p class="splash-label" id="splash-label">Initializing...</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     LOADER 2 — SKELETON SCREEN (shows briefly after splash)
+============================================================ -->
+<div id="skeleton-screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px">
+    <div class="skeleton" style="width:120px;height:24px"></div>
+    <div style="display:flex;gap:16px">
+      <div class="skeleton" style="width:60px;height:14px"></div>
+      <div class="skeleton" style="width:60px;height:14px"></div>
+      <div class="skeleton" style="width:60px;height:14px"></div>
+      <div class="skeleton" style="width:80px;height:36px;border-radius:10px"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:48px;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:18px">
+      <div class="skeleton" style="width:80px;height:12px"></div>
+      <div class="skeleton" style="height:56px;border-radius:12px"></div>
+      <div class="skeleton" style="width:70%;height:22px"></div>
+      <div class="skeleton" style="height:80px;border-radius:12px"></div>
+      <div style="display:flex;gap:12px">
+        <div class="skeleton" style="width:140px;height:46px;border-radius:10px"></div>
+        <div class="skeleton" style="width:140px;height:46px;border-radius:10px"></div>
+      </div>
+    </div>
+    <div class="skeleton" style="width:220px;height:220px;border-radius:50%;flex-shrink:0"></div>
+  </div>
+  <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+    <div class="skeleton" style="height:180px;border-radius:16px"></div>
+    <div class="skeleton" style="height:180px;border-radius:16px"></div>
+    <div class="skeleton" style="height:180px;border-radius:16px"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT (hidden until loaders finish)
+============================================================ -->
+<div id="main-content" style="opacity:0;transition:opacity 0.6s ease">
+
+<!-- NAVBAR -->
+<header id="navbar">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+    <a href="#home" class="font-display font-700 text-lg text-white tracking-tight" style="font-family:'Space Grotesk'">
+      <span style="color:#00E5FF">A</span>bdul Samad
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#about"    class="nav-link">About</a>
+      <a href="#skills"   class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#contact"  class="nav-link">Contact</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a href="#contact" class="hidden md:inline-flex btn-primary text-sm py-2 px-5">
+        <i class="fa-solid fa-envelope"></i> Hire Me
+      </a>
+      <button id="menu-btn" class="md:hidden text-slate-400 hover:text-cyan focus:outline-none" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars text-xl" style="color:#8892A4"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" style="max-height:0;opacity:0;overflow:hidden">
+    <div class="px-6 pb-5 flex flex-col gap-4" style="background:rgba(10,15,30,0.98)">
+      <a href="#about"    class="nav-link py-2" onclick="closeMenu()">About</a>
+      <a href="#skills"   class="nav-link py-2" onclick="closeMenu()">Skills</a>
+      <a href="#projects" class="nav-link py-2" onclick="closeMenu()">Projects</a>
+      <a href="#contact"  class="nav-link py-2" onclick="closeMenu()">Contact</a>
+      <a href="#contact"  class="btn-primary justify-center py-3" onclick="closeMenu()">Hire Me</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="home" class="hero-grid min-h-screen flex items-center pt-16 relative">
+  <canvas id="particle-canvas"></canvas>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Floating code decorations -->
+  <span class="code-deco" style="top:18%;left:4%;animation-delay:0s">&lt;div class="dev"&gt;</span>
+  <span class="code-deco" style="top:75%;right:5%;animation-delay:-2s">const future = 'bright';</span>
+  <span class="code-deco" style="top:35%;right:12%;animation-delay:-4s">@Component({})</span>
+  <span class="code-deco" style="bottom:20%;left:8%;animation-delay:-1s">flutter run</span>
+
+  <div class="max-w-6xl mx-auto px-6 w-full py-24 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 order-2 lg:order-1">
+        <div class="hero-reveal">
+          <p class="section-eyebrow mb-4">Hello, World! 👋</p>
+        </div>
+
+        <div class="hero-reveal">
+          <h1 class="font-display font-700 text-5xl md:text-6xl xl:text-7xl text-white leading-tight mb-4" style="font-family:'Space Grotesk'">
+            I'm <span style="color:#00E5FF" class="text-glow">Abdul Samad</span>
+          </h1>
+        </div>
+
+        <div class="hero-reveal">
+          <div class="font-display text-xl md:text-2xl mb-6 h-9 flex items-center" style="color:#8892A4;font-family:'Space Grotesk'">
+            <span id="typewriter"></span><span class="cursor"></span>
+          </div>
+        </div>
+
+        <div class="hero-reveal">
+          <p class="leading-relaxed max-w-lg mb-10" style="color:#8892A4;font-size:1rem;line-height:1.85">
+            A passionate beginner developer from Pakistan 🇵🇰, building projects across web, mobile, and backend — continuously leveling up skills. Open to learning, collaboration, and new opportunities.
+          </p>
+        </div>
+
+        <div class="hero-reveal">
+          <div class="flex flex-wrap gap-4 mb-10">
+            <a href="#projects" class="btn-primary">
+              <i class="fa-solid fa-rocket"></i> View My Work
+            </a>
+            <a href="#contact" class="btn-outline">
+              <i class="fa-solid fa-paper-plane"></i> Get In Touch
+            </a>
+          </div>
+
+          <div class="flex items-center gap-5">
+            <a href="https://github.com" target="_blank" aria-label="GitHub"
+               class="text-lg transition-all hover:scale-110" style="color:#8892A4;transition:color 0.2s,transform 0.2s">
+              <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"
+               class="text-lg" style="color:#8892A4;transition:color 0.2s,transform 0.2s">
+              <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a href="mailto:abdulsamad@email.com" aria-label="Email"
+               class="text-lg" style="color:#8892A4;transition:color 0.2s,transform 0.2s">
+              <i class="fa-solid fa-envelope"></i>
+            </a>
+            <div style="height:16px;width:1px;background:rgba(0,229,255,0.2)"></div>
+            <span style="font-size:0.7rem;color:#4A5568;letter-spacing:0.12em;font-family:'Space Grotesk'">OPEN TO WORK</span>
+            <span class="status-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="order-1 lg:order-2 flex-shrink-0 hero-reveal">
+        <div style="position:relative">
+          <!-- Outer glow ring -->
+          <div class="avatar-ring rounded-full" style="width:270px;height:270px;display:flex;align-items:center;justify-content:center;background:#0D1426">
+            <div style="width:248px;height:248px;border-radius:50%;background:linear-gradient(145deg,#162040 0%,#1E2A4A 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+              <!-- Inner shimmer -->
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.04) 0%,transparent 60%);border-radius:50%"></div>
+              <span style="font-family:'Space Grotesk';font-size:5.5rem;font-weight:700;color:#00E5FF;opacity:0.9;text-shadow:0 0 40px rgba(0,229,255,0.7);position:relative;z-index:1">AS</span>
+            </div>
+          </div>
+          <!-- Badge -->
+          <div style="position:absolute;bottom:10px;right:0;background:#111B33;border:1px solid rgba(0,229,255,0.25);border-radius:30px;padding:6px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+            <i class="fa-solid fa-code" style="color:#00E5FF;font-size:0.75rem"></i>
+            <span style="font-family:'Space Grotesk';font-size:0.72rem;color:#B8C2D0;letter-spacing:0.05em">Developer</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hero bottom fade -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,#0A0F1E);pointer-events:none"></div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+<section id="about" class="py-28">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+
+      <div class="fade-left">
+        <p class="section-eyebrow mb-3">Who I Am</p>
+        <h2 class="font-display text-4xl font-700 text-white mb-6 heading-line" style="font-family:'Space Grotesk'">
+          A Developer Who Loves to Build & Learn
+        </h2>
+        <p class="mb-4" style="color:#8892A4;line-height:1.85;font-size:0.97rem">
+          Hi! I'm <strong style="color:#F0F4FF">Abdul Samad</strong>, a beginner-level developer from Pakistan with a strong drive to grow in software development. I've been exploring a wide range of technologies — from web and mobile to backend and databases.
+        </p>
+        <p class="mb-8" style="color:#8892A4;line-height:1.85;font-size:0.97rem">
+          I believe every project, no matter how small, is a chance to learn something new. Currently focused on building real-world projects to sharpen my skills and build a strong foundation.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="card-border rounded-xl p-4 text-center" style="background:#111B33;cursor:default">
+            <p class="font-display text-3xl font-700 stat-number" style="color:#00E5FF;font-family:'Space Grotesk'" data-target="20">0</p>
+            <p style="font-size:0.7rem;margin-top:4px;color:#8892A4;letter-spacing:0.05em">Technologies</p>
+          </div>
+          <div class="card-border rounded-xl p-4 text-center" style="background:#111B33;cursor:default">
+            <p class="font-display text-3xl font-700 stat-number" style="color:#00E5FF;font-family:'Space Grotesk'" data-target="10">0</p>
+            <p style="font-size:0.7rem;margin-top:4px;color:#8892A4;letter-spacing:0.05em">Projects</p>
+          </div>
+          <div class="card-border rounded-xl p-4 text-center" style="background:#111B33;cursor:default">
+            <p class="font-display text-3xl font-700" style="color:#00E5FF;font-family:'Space Grotesk'">∞</p>
+            <p style="font-size:0.7rem;margin-top:4px;color:#8892A4;letter-spacing:0.05em">Will to Learn</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-right">
+        <div class="card-border rounded-2xl p-8" style="background:#111B33">
+          <h3 class="font-display text-lg font-600 text-white mb-6" style="font-family:'Space Grotesk'">Quick Info</h3>
+          <ul class="space-y-4">
+            <li class="flex items-center gap-4">
+              <span style="width:36px;height:36px;border-radius:9px;background:#162040;border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fa-solid fa-user" style="font-size:0.75rem;color:#00E5FF"></i>
+              </span>
+              <div>
+                <p style="font-size:0.7rem;color:#4A5568">Full Name</p>
+                <p style="font-size:0.9rem;font-weight:500;color:#F0F4FF">Abdul Samad</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <span style="width:36px;height:36px;border-radius:9px;background:#162040;border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fa-solid fa-location-dot" style="font-size:0.75rem;color:#00E5FF"></i>
+              </span>
+              <div>
+                <p style="font-size:0.7rem;color:#4A5568">Location</p>
+                <p style="font-size:0.9rem;font-weight:500;color:#F0F4FF">Pakistan 🇵🇰</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <span style="width:36px;height:36px;border-radius:9px;background:#162040;border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fa-solid fa-code" style="font-size:0.75rem;color:#00E5FF"></i>
+              </span>
+              <div>
+                <p style="font-size:0.7rem;color:#4A5568">Focus</p>
+                <p style="font-size:0.9rem;font-weight:500;color:#F0F4FF">Full-Stack & Mobile Dev</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <span style="width:36px;height:36px;border-radius:9px;background:#162040;border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fa-solid fa-graduation-cap" style="font-size:0.75rem;color:#00E5FF"></i>
+              </span>
+              <div>
+                <p style="font-size:0.7rem;color:#4A5568">Level</p>
+                <p style="font-size:0.9rem;font-weight:500;color:#F0F4FF">Beginner → Growing Fast 🚀</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <span style="width:36px;height:36px;border-radius:9px;background:#162040;border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fa-solid fa-circle-check" style="font-size:0.75rem;color:#00E5FF"></i>
+              </span>
+              <div>
+                <p style="font-size:0.7rem;color:#4A5568">Status</p>
+                <p style="font-size:0.9rem;font-weight:500;color:#00E5FF">Available for Opportunities</p>
+              </div>
+            </li>
+          </ul>
+          <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(0,229,255,0.08)">
+            <a href="#" class="btn-outline w-full justify-center py-3">
+              <i class="fa-solid fa-download"></i> Download CV
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ============================================================
+     SKILLS
+============================================================ -->
+<section id="skills" class="py-28 fade-in" style="background:#0D1426">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="section-eyebrow mb-3">My Toolbox</p>
+      <h2 class="font-display text-4xl font-700 text-white" style="font-family:'Space Grotesk'">Technologies I Work With</h2>
+      <p class="mt-4 max-w-xl mx-auto" style="color:#8892A4">Beginner-level across all — actively building real projects to level up every day.</p>
+    </div>
+
+    <div class="space-y-10" id="skills-container">
+
+      <div>
+        <p style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">Frontend & Styling</p>
+        <div class="flex flex-wrap gap-3" id="skills-frontend">
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>HTML</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>CSS</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>JavaScript</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Bootstrap</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>jQuery</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Tailwind CSS</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>React JS</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Angular + TypeScript</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">Backend & APIs</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>PHP</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Laravel</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Node JS</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>ASP.NET MVC Core</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>C#</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">Databases</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>MySQL</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>SQL</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>MongoDB</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>JSON</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">Mobile Development</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Flutter</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Dart</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">Design & Tools</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>UI/UX (Figma)</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>Git</div>
+          <div class="skill-pill stagger-child"><span class="skill-dot"></span>GitHub</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ============================================================
+     PROJECTS
+============================================================ -->
+<section id="projects" class="py-28 fade-in">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="section-eyebrow mb-3">Portfolio</p>
+      <h2 class="font-display text-4xl font-700 text-white" style="font-family:'Space Grotesk'">Things I've Built</h2>
+      <p class="mt-4 max-w-xl mx-auto" style="color:#8892A4">Practice projects built while learning — each one taught me something new.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="project-card stagger-child">
+        <div class="project-thumb" style="height:190px;background:linear-gradient(135deg,#162040 0%,#1E2A4A 100%);display:flex;align-items:center;justify-content:center;position:relative">
+          <div style="position:absolute;top:16px;left:16px;font-family:'Space Grotesk';font-size:0.65rem;color:rgba(0,229,255,0.35);letter-spacing:0.1em">PROJECT 01</div>
+          <div class="icon-wrap" style="width:72px;height:72px;border-radius:18px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center">
+            <i class="fa-solid fa-globe" style="font-size:2rem;color:#00E5FF;opacity:0.7"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">HTML</span>
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">CSS</span>
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">JavaScript</span>
+          </div>
+          <h3 class="font-display text-lg font-600 text-white mb-2" style="font-family:'Space Grotesk'">Personal Blog Website</h3>
+          <p style="font-size:0.85rem;color:#8892A4;line-height:1.7;margin-bottom:20px">A responsive blog built with vanilla HTML, CSS, and JavaScript. My first complete web project with dark/light mode toggle.</p>
+          <div class="flex gap-4">
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#00E5FF;display:flex;align-items:center;gap:5px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+              <i class="fa-brands fa-github"></i> Code
+            </a>
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#8892A4;display:flex;align-items:center;gap:5px;transition:color 0.2s" onmouseover="this.style.color='#F0F4FF'" onmouseout="this.style.color='#8892A4'">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card stagger-child">
+        <div class="project-thumb" style="height:190px;background:linear-gradient(135deg,#0F1A2E 0%,#162040 100%);display:flex;align-items:center;justify-content:center;position:relative">
+          <div style="position:absolute;top:16px;left:16px;font-family:'Space Grotesk';font-size:0.65rem;color:rgba(0,229,255,0.35);letter-spacing:0.1em">PROJECT 02</div>
+          <div class="icon-wrap" style="width:72px;height:72px;border-radius:18px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center">
+            <i class="fa-solid fa-mobile-screen" style="font-size:2rem;color:#00E5FF;opacity:0.7"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">Flutter</span>
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">Dart</span>
+          </div>
+          <h3 class="font-display text-lg font-600 text-white mb-2" style="font-family:'Space Grotesk'">Todo App — Flutter</h3>
+          <p style="font-size:0.85rem;color:#8892A4;line-height:1.7;margin-bottom:20px">A simple mobile to-do list app built with Flutter. Add, edit, delete tasks — my first cross-platform mobile project.</p>
+          <div class="flex gap-4">
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#00E5FF;display:flex;align-items:center;gap:5px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+              <i class="fa-brands fa-github"></i> Code
+            </a>
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#8892A4;display:flex;align-items:center;gap:5px;transition:color 0.2s" onmouseover="this.style.color='#F0F4FF'" onmouseout="this.style.color='#8892A4'">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Preview
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card stagger-child">
+        <div class="project-thumb" style="height:190px;background:linear-gradient(135deg,#111B33 0%,#162040 100%);display:flex;align-items:center;justify-content:center;position:relative">
+          <div style="position:absolute;top:16px;left:16px;font-family:'Space Grotesk';font-size:0.65rem;color:rgba(0,229,255,0.35);letter-spacing:0.1em">PROJECT 03</div>
+          <div class="icon-wrap" style="width:72px;height:72px;border-radius:18px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);display:flex;align-items:center;justify-content:center">
+            <i class="fa-solid fa-database" style="font-size:2rem;color:#00E5FF;opacity:0.7"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">PHP</span>
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">Laravel</span>
+            <span style="font-size:0.68rem;background:rgba(0,229,255,0.08);color:#00E5FF;border:1px solid rgba(0,229,255,0.18);border-radius:6px;padding:3px 10px;font-family:'Space Grotesk'">MySQL</span>
+          </div>
+          <h3 class="font-display text-lg font-600 text-white mb-2" style="font-family:'Space Grotesk'">Student CRUD System</h3>
+          <p style="font-size:0.85rem;color:#8892A4;line-height:1.7;margin-bottom:20px">A CRUD application using PHP and MySQL to manage student records. Built with Laravel for clean MVC structure.</p>
+          <div class="flex gap-4">
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#00E5FF;display:flex;align-items:center;gap:5px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+              <i class="fa-brands fa-github"></i> Code
+            </a>
+            <a href="#" style="font-size:0.8rem;font-weight:500;color:#8892A4;display:flex;align-items:center;gap:5px;transition:color 0.2s" onmouseover="this.style.color='#F0F4FF'" onmouseout="this.style.color='#8892A4'">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-14">
+      <a href="https://github.com" target="_blank" class="btn-outline">
+        <i class="fa-brands fa-github"></i> See All Projects on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section id="contact" class="py-28 fade-in" style="background:#0D1426">
+  <div class="max-w-3xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <p class="section-eyebrow mb-3">Let's Connect</p>
+      <h2 class="font-display text-4xl font-700 text-white" style="font-family:'Space Grotesk'">Get In Touch</h2>
+      <p class="mt-4" style="color:#8892A4">Have a project, opportunity, or just want to say hi? My inbox is always open.</p>
+    </div>
+
+    <div class="card-border rounded-2xl p-8 md:p-10" style="background:#111B33">
+      <div class="grid sm:grid-cols-2 gap-5 mb-5">
+        <div>
+          <label style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Your Name</label>
+          <input id="cf-name" type="text" placeholder="e.g. Ahmed Ali" class="contact-input" />
+        </div>
+        <div>
+          <label style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Email Address</label>
+          <input id="cf-email" type="email" placeholder="ahmed@example.com" class="contact-input" />
+        </div>
+      </div>
+      <div class="mb-5">
+        <label style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Subject</label>
+        <input id="cf-subject" type="text" placeholder="What is this about?" class="contact-input" />
+      </div>
+      <div class="mb-7">
+        <label style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Message</label>
+        <textarea id="cf-message" rows="5" placeholder="Write your message here..." class="contact-input" style="resize:vertical"></textarea>
+      </div>
+      <button id="cf-btn" onclick="sendEmail()" class="btn-primary w-full justify-center py-4">
+        <i class="fa-solid fa-paper-plane"></i> Send Message
+      </button>
+    </div>
+
+    <div class="flex justify-center gap-8 mt-10">
+      <a href="https://github.com" target="_blank" style="color:#8892A4;font-size:0.9rem;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='#00E5FF'" onmouseout="this.style.color='#8892A4'">
+        <i class="fa-brands fa-github"></i> GitHub
+      </a>
+      <a href="https://linkedin.com" target="_blank" style="color:#8892A4;font-size:0.9rem;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='#00E5FF'" onmouseout="this.style.color='#8892A4'">
+        <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+      </a>
+      <a href="mailto:abdulsamad@email.com" style="color:#8892A4;font-size:0.9rem;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='#00E5FF'" onmouseout="this.style.color='#8892A4'">
+        <i class="fa-solid fa-envelope"></i> Email
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- Toast -->
+<div id="toast"></div>
+
+
+<!-- FOOTER -->
+<footer class="py-8 text-center" style="border-top:1px solid rgba(0,229,255,0.07)">
+  <p style="font-size:0.875rem;color:#4A5568;font-family:'Space Grotesk'">
+    Designed & Built by <span style="color:#00E5FF">Abdul Samad</span> — 2025
+  </p>
+  <p style="font-size:0.75rem;margin-top:6px;color:#2D3748">Made with HTML · Tailwind CSS · JavaScript</p>
+</footer>
+
+</div><!-- /main-content -->
+
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script>
+/* ============================================================
+   LOADER SEQUENCE
+   1. Splash (progress bar fills 0→100 over ~2.2s)
+   2. Skeleton screen flashes for 0.6s
+   3. Main content fades in
+============================================================ */
+(function() {
+  const splash   = document.getElementById('loader-splash');
+  const skeleton = document.getElementById('skeleton-screen');
+  const main     = document.getElementById('main-content');
+  const bar      = document.getElementById('splash-bar');
+  const label    = document.getElementById('splash-label');
+
+  const labels = ['Initializing...', 'Loading assets...', 'Building UI...', 'Almost ready...', 'Welcome!'];
+  let progress = 0;
+  let labelIdx = 0;
+
+  const interval = setInterval(() => {
+    progress += Math.random() * 4 + 2;
+    if (progress > 100) progress = 100;
+    bar.style.width = progress + '%';
+
+    const li = Math.floor((progress / 100) * (labels.length - 1));
+    if (li !== labelIdx) { labelIdx = li; label.textContent = labels[li]; }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+
+      // After 400ms more, fade out splash, show skeleton
+      setTimeout(() => {
+        splash.classList.add('hidden');
+        skeleton.classList.add('show');
+
+        // After skeleton shows for 600ms, show main content
+        setTimeout(() => {
+          skeleton.style.opacity = '0';
+          skeleton.style.transition = 'opacity 0.4s';
+          setTimeout(() => {
+            skeleton.classList.remove('show');
+            skeleton.style.display = 'none';
+            document.body.classList.remove('loading');
+            main.style.opacity = '1';
+            // Trigger hero animations immediately
+            initAll();
+          }, 400);
+        }, 600);
+      }, 400);
+    }
+  }, 40);
+})();
+
+
+/* ============================================================
+   PARTICLE CANVAS — floating dots
+============================================================ */
+function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 55; i++) {
+    particles.push({
+      x: Math.random() * 1920,
+      y: Math.random() * 1080,
+      r: Math.random() * 1.5 + 0.3,
+      dx: (Math.random() - 0.5) * 0.3,
+      dy: (Math.random() - 0.5) * 0.3,
+      a: Math.random() * 0.5 + 0.1,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,229,255,${p.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+
+/* ============================================================
+   TYPEWRITER
+============================================================ */
+function initTypewriter() {
+  const phrases = [
+    'Frontend Developer',
+    'Flutter & Dart Developer',
+    'Laravel Back-End Developer',
+    'React & Angular Developer',
+    'UI/UX Enthusiast',
+    'Always Learning 📚',
+  ];
+  let pi = 0, ci = 0, deleting = false;
+  const el = document.getElementById('typewriter');
+  if (!el) return;
+
+  function type() {
+    const word = phrases[pi];
+    if (!deleting) {
+      el.textContent = word.slice(0, ci + 1);
+      ci++;
+      if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = word.slice(0, ci - 1);
+      ci--;
+      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+    }
+    setTimeout(type, deleting ? 50 : 80);
+  }
+  setTimeout(type, 600);
+}
+
+
+/* ============================================================
+   NAVBAR — scroll effects
+============================================================ */
+function initNavbar() {
+  const navbar = document.getElementById('navbar');
+  const btn    = document.getElementById('menu-btn');
+  const menu   = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    menu.style.maxHeight = menuOpen ? '400px' : '0';
+    menu.style.opacity   = menuOpen ? '1'    : '0';
+    btn.innerHTML = menuOpen
+      ? '<i class="fa-solid fa-xmark text-xl" style="color:#8892A4"></i>'
+      : '<i class="fa-solid fa-bars text-xl" style="color:#8892A4"></i>';
+  });
+
+  window.closeMenu = function() {
+    menuOpen = false;
+    menu.style.maxHeight = '0';
+    menu.style.opacity   = '0';
+    btn.innerHTML = '<i class="fa-solid fa-bars text-xl" style="color:#8892A4"></i>';
+  };
+}
+
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+============================================================ */
+function initScrollProgress() {
+  const bar = document.getElementById('scroll-progress');
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (window.scrollY / total * 100) + '%';
+  }, { passive: true });
+}
+
+
+/* ============================================================
+   SCROLL ANIMATIONS — fade-in, fade-left, fade-right, stagger
+============================================================ */
+function initScrollAnimations() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in, .fade-left, .fade-right').forEach(el => obs.observe(el));
+
+  // Staggered children
+  const staggerObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const items = entry.target.querySelectorAll('.stagger-child');
+        items.forEach((item, i) => {
+          setTimeout(() => item.classList.add('visible'), i * 70);
+        });
+        staggerObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('#skills-container, .grid').forEach(el => staggerObs.observe(el));
+}
+
+
+/* ============================================================
+   ACTIVE NAV LINK
+============================================================ */
+function initActiveNav() {
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    links.forEach(l => {
+      const active = l.getAttribute('href') === '#' + current;
+      l.classList.toggle('active', active);
+    });
+  }, { passive: true });
+}
+
+
+/* ============================================================
+   COUNT-UP NUMBERS
+============================================================ */
+function initCountUp() {
+  const nums = document.querySelectorAll('.stat-number');
+  const obs  = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const target = +e.target.dataset.target;
+        let current  = 0;
+        const step   = target / 30;
+        const timer  = setInterval(() => {
+          current += step;
+          if (current >= target) { current = target; clearInterval(timer); }
+          e.target.textContent = Math.floor(current) + '+';
+        }, 40);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  nums.forEach(n => obs.observe(n));
+}
+
+
+/* ============================================================
+   EMAILJS
+============================================================ */
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+function initEmailJS() {
+  if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  const icon = type === 'success'
+    ? '<i class="fa-solid fa-circle-check"></i>'
+    : '<i class="fa-solid fa-circle-exclamation"></i>';
+  t.innerHTML = icon + msg;
+  t.className = 'show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 4500);
+}
+
+window.sendEmail = function() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const subject = document.getElementById('cf-subject').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const btn     = document.getElementById('cf-btn');
+
+  if (!name || !email || !subject || !message) {
+    showToast('Please fill in all fields.', 'error'); return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('Please enter a valid email address.', 'error'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    from_name: name, from_email: email, subject, message,
+  })
+  .then(() => {
+    showToast("Message sent! I'll reply soon. ✨", 'success');
+    ['cf-name','cf-email','cf-subject','cf-message'].forEach(id => document.getElementById(id).value = '');
+  })
+  .catch(err => {
+    console.error(err);
+    showToast('Something went wrong. Please try again.', 'error');
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+  });
+};
+
+
+/* ============================================================
+   INIT ALL
+============================================================ */
+function initAll() {
+  initParticles();
+  initTypewriter();
+  initNavbar();
+  initScrollProgress();
+  initScrollAnimations();
+  initActiveNav();
+  initCountUp();
+  initEmailJS();
+}
+</script>
+
+</body>
+</html>
