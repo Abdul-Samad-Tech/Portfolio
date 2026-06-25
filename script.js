@@ -14,17 +14,15 @@ tailwind.config = {
   }
 }
 
-(function() {
-  const splash   = document.getElementById('loader-splash');
-  const main     = document.getElementById('main-content');
+window.addEventListener('load', function() {
+  const splash = document.getElementById('loader-splash');
+  const main = document.getElementById('main-content');
   
-  setTimeout(() => {
-    if (splash) splash.classList.add('hidden');
-    document.body.classList.remove('loading');
-    if (main) main.style.opacity = '1';
-    initAll();
-  }, 1500);
-})();
+  if (splash) splash.style.display = 'none';
+  document.body.classList.remove('loading');
+  if (main) main.style.opacity = '1';
+  initAll();
+});
 
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
