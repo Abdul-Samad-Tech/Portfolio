@@ -10,63 +10,16 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="image" href="images/PFP.jpeg">
 </head>
 
 <body>
 
     <div id="scroll-progress"></div>
 
-    <div id="loader-splash">
-    <div class="splash-orbit">
-      <div class="splash-orbit-ring"></div>
-      <div class="splash-orbit-ring"></div>
-      <div class="splash-center-dot"></div>
-    </div>
-
-    <div class="splash-logo"><span>AS</span></div>
-
-    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
-      <div class="splash-bar-wrap">
-        <div class="splash-bar" id="splash-bar"></div>
-      </div>
-      <p class="splash-label" id="splash-label">Initializing...</p>
-    </div>
-  </div>
-
-    <div id="skeleton-screen">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px">
-      <div class="skeleton" style="width:120px;height:24px"></div>
-      <div style="display:flex;gap:16px">
-        <div class="skeleton" style="width:60px;height:14px"></div>
-        <div class="skeleton" style="width:60px;height:14px"></div>
-        <div class="skeleton" style="width:60px;height:14px"></div>
-        <div class="skeleton" style="width:80px;height:36px;border-radius:10px"></div>
-      </div>
-    </div>
-    <div style="display:flex;gap:48px;align-items:center">
-      <div style="flex:1;display:flex;flex-direction:column;gap:18px">
-        <div class="skeleton" style="width:80px;height:12px"></div>
-        <div class="skeleton" style="height:56px;border-radius:12px"></div>
-        <div class="skeleton" style="width:70%;height:22px"></div>
-        <div class="skeleton" style="height:80px;border-radius:12px"></div>
-        <div style="display:flex;gap:12px">
-          <div class="skeleton" style="width:140px;height:46px;border-radius:10px"></div>
-          <div class="skeleton" style="width:140px;height:46px;border-radius:10px"></div>
-        </div>
-      </div>
-      <div class="skeleton" style="width:220px;height:220px;border-radius:50%;flex-shrink:0"></div>
-    </div>
-    <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
-      <div class="skeleton" style="height:180px;border-radius:16px"></div>
-      <div class="skeleton" style="height:180px;border-radius:16px"></div>
-      <div class="skeleton" style="height:180px;border-radius:16px"></div>
-    </div>
-  </div>
-
-    <div id="main-content" style="opacity:0;transition:opacity 0.6s ease">
+    <div id="main-content">
 
         <header id="navbar">
       <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
@@ -175,23 +128,27 @@
           </div>
 
               <div class="order-1 lg:order-2 flex-shrink-0 hero-reveal">
-            <div style="position:relative">
-                  <div class="avatar-ring rounded-full"
-                style="width:270px;height:270px;display:flex;align-items:center;justify-content:center;background:#0D1426">
-                <div
-                  style="width:248px;height:248px;border-radius:50%;background:linear-gradient(145deg,#162040 0%,#1E2A4A 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
-                      <div
-                    style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.04) 0%,transparent 60%);border-radius:50%">
-                  </div>
-                  <span
-                    style="font-family:'Space Grotesk';font-size:5.5rem;font-weight:700;color:#00E5FF;opacity:0.9;text-shadow:0 0 40px rgba(0,229,255,0.7);position:relative;z-index:1">AS</span>
+            <div class="avatar-wrap">
+              <div class="avatar-ring">
+                <div class="avatar-inner">
+                  <img
+                    src="images/PFP.jpeg"
+                    alt="Abdul Samad — Developer"
+                    class="avatar-photo"
+                    width="248"
+                    height="248"
+                    loading="eager"
+                    decoding="async"
+                    onerror="this.hidden=true; this.nextElementSibling.hidden=false;"
+                  />
+                  <span class="avatar-fallback" hidden>AS</span>
+                  <div class="avatar-overlay"></div>
+                  <div class="avatar-shine"></div>
                 </div>
               </div>
-                  <div
-                style="position:absolute;bottom:10px;right:0;background:#111B33;border:1px solid rgba(0,229,255,0.25);border-radius:30px;padding:6px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
-                <i class="fa-solid fa-code" style="color:#00E5FF;font-size:0.75rem"></i>
-                <span
-                  style="font-family:'Space Grotesk';font-size:0.72rem;color:#B8C2D0;letter-spacing:0.05em">Developer</span>
+              <div class="avatar-badge">
+                <i class="fa-solid fa-code"></i>
+                <span>Developer</span>
               </div>
             </div>
           </div>
@@ -545,36 +502,40 @@
             open.</p>
         </div>
 
-        <div class="card-border rounded-2xl p-8 md:p-10" style="background:#111B33">
+        <form id="contact-form" class="card-border rounded-2xl p-8 md:p-10" style="background:#111B33"
+          onsubmit="sendEmail(event)">
           <div class="grid sm:grid-cols-2 gap-5 mb-5">
             <div>
-              <label
+              <label for="cf-name"
                 style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Your
                 Name</label>
-              <input id="cf-name" type="text" placeholder="e.g. Ahmed Ali" class="contact-input" />
+              <input id="cf-name" name="from_name" type="text" placeholder="e.g. Ahmed Ali" class="contact-input"
+                required />
             </div>
             <div>
-              <label
+              <label for="cf-email"
                 style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Email
                 Address</label>
-              <input id="cf-email" type="email" placeholder="ahmed@example.com" class="contact-input" />
+              <input id="cf-email" name="from_email" type="email" placeholder="ahmed@example.com" class="contact-input"
+                required />
             </div>
           </div>
           <div class="mb-5">
-            <label
+            <label for="cf-subject"
               style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Subject</label>
-            <input id="cf-subject" type="text" placeholder="What is this about?" class="contact-input" />
+            <input id="cf-subject" name="subject" type="text" placeholder="What is this about?" class="contact-input"
+              required />
           </div>
           <div class="mb-7">
-            <label
+            <label for="cf-message"
               style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Message</label>
-            <textarea id="cf-message" rows="5" placeholder="Write your message here..." class="contact-input"
-              style="resize:vertical"></textarea>
+            <textarea id="cf-message" name="message" rows="5" placeholder="Write your message here..." class="contact-input"
+              style="resize:vertical" required></textarea>
           </div>
-          <button id="cf-btn" onclick="sendEmail()" class="btn-primary w-full justify-center py-4">
+          <button id="cf-btn" type="submit" class="btn-primary w-full justify-center py-4">
             <i class="fa-solid fa-paper-plane"></i> Send Message
           </button>
-        </div>
+        </form>
 
         <div class="flex justify-center gap-8 mt-10">
           <a href="https://github.com" target="_blank"

@@ -14,14 +14,32 @@ tailwind.config = {
   }
 }
 
-window.addEventListener('load', function() {
+let booted = false;
+
+function boot() {
+  if (booted) return;
+  booted = true;
+
   const splash = document.getElementById('loader-splash');
+  const skeleton = document.getElementById('skeleton-screen');
   const main = document.getElementById('main-content');
-  
-  if (splash) splash.style.display = 'none';
+
+  if (splash) splash.classList.add('hidden');
+  if (skeleton) skeleton.style.display = 'none';
   if (main) main.style.opacity = '1';
+  document.body.classList.remove('loading');
+
   initAll();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+
+// Fallback: never stay stuck if external assets block the page
+setTimeout(boot, 3000);
 
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
@@ -182,13 +200,7 @@ function initCountUp() {
   nums.forEach(n => obs.observe(n));
 }
 
-const EMAILJS_PUBLIC_KEY  = 'B2afaPCHJ9Tz8zUpr';
-const EMAILJS_SERVICE_ID  = 'service_4min7ud';
-const EMAILJS_TEMPLATE_ID = 'service_4min7ud';
-
-function initEmailJS() {
-  if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-}
+const CONTACT_EMAIL = 'abdulsamadzubairkamal@gmail.com';
 
 let toastTimer;
 function showToast(msg, type) {
@@ -202,38 +214,56 @@ function showToast(msg, type) {
   toastTimer = setTimeout(() => { t.className = ''; }, 4500);
 }
 
-window.sendEmail = function() {
+window.sendEmail = async function(event) {
+  if (event) event.preventDefault();
+
+  const form    = document.getElementById('contact-form');
   const name    = document.getElementById('cf-name').value.trim();
   const email   = document.getElementById('cf-email').value.trim();
   const subject = document.getElementById('cf-subject').value.trim();
   const message = document.getElementById('cf-message').value.trim();
   const btn     = document.getElementById('cf-btn');
 
-  if (!name || !email || !subject || !message) {
-    showToast('Please fill in all fields.', 'error'); return;
+  if (!form || !name || !email || !subject || !message) {
+    showToast('Please fill in all fields.', 'error');
+    return;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast('Please enter a valid email address.', 'error'); return;
+    showToast('Please enter a valid email address.', 'error');
+    return;
   }
 
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    from_name: name, from_email: email, subject, message,
-  })
-  .then(() => {
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        _subject: subject,
+        message,
+        _template: 'table',
+        _captcha: 'false',
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok || String(data.success).toLowerCase() !== 'true') {
+      throw new Error(data.message || 'Send failed');
+    }
+
     showToast("Message sent! I'll reply soon. ✨", 'success');
-    ['cf-name','cf-email','cf-subject','cf-message'].forEach(id => document.getElementById(id).value = '');
-  })
-  .catch(err => {
+    form.reset();
+  } catch (err) {
     console.error(err);
-    showToast('Something went wrong. Please try again.', 'error');
-  })
-  .finally(() => {
+    showToast(err.message || 'Something went wrong. Please try again.', 'error');
+  } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
-  });
+  }
 };
 
 function initAll() {
@@ -244,5 +274,4 @@ function initAll() {
   initScrollAnimations();
   initActiveNav();
   initCountUp();
-  initEmailJS();
 }
