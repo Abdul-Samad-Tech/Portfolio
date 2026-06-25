@@ -19,7 +19,6 @@ window.addEventListener('load', function() {
   const main = document.getElementById('main-content');
   
   if (splash) splash.style.display = 'none';
-  document.body.classList.remove('loading');
   if (main) main.style.opacity = '1';
   initAll();
 });
