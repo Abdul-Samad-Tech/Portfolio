@@ -16,61 +16,14 @@ tailwind.config = {
 
 (function() {
   const splash   = document.getElementById('loader-splash');
-  const skeleton = document.getElementById('skeleton-screen');
   const main     = document.getElementById('main-content');
-  const bar      = document.getElementById('splash-bar');
-  const label    = document.getElementById('splash-label');
-
-  const labels = ['Initializing...', 'Loading assets...', 'Building UI...', 'Almost ready...', 'Welcome!'];
-  let progress = 0;
-  let labelIdx = 0;
-
-  const interval = setInterval(() => {
-    progress += Math.random() * 6 + 3;
-    if (progress > 100) progress = 100;
-    bar.style.width = progress + '%';
-
-    const li = Math.floor((progress / 100) * (labels.length - 1));
-    if (li !== labelIdx) { labelIdx = li; label.textContent = labels[li]; }
-
-    if (progress >= 100) {
-      clearInterval(interval);
-
-      setTimeout(() => {
-        splash.classList.add('hidden');
-        skeleton.classList.add('show');
-
-        setTimeout(() => {
-          skeleton.style.opacity = '0';
-          skeleton.style.transition = 'opacity 0.4s';
-          setTimeout(() => {
-            skeleton.classList.remove('show');
-            skeleton.style.display = 'none';
-            document.body.classList.remove('loading');
-            main.style.opacity = '1';
-            initAll();
-          }, 400);
-        }, 400);
-      }, 300);
-    }
-  }, 25);
-
+  
   setTimeout(() => {
-    clearInterval(interval);
-    splash.classList.add('hidden');
-    skeleton.classList.add('show');
-    setTimeout(() => {
-      skeleton.style.opacity = '0';
-      skeleton.style.transition = 'opacity 0.4s';
-      setTimeout(() => {
-        skeleton.classList.remove('show');
-        skeleton.style.display = 'none';
-        document.body.classList.remove('loading');
-        main.style.opacity = '1';
-        initAll();
-      }, 400);
-    }, 400);
-  }, 4000);
+    if (splash) splash.classList.add('hidden');
+    document.body.classList.remove('loading');
+    if (main) main.style.opacity = '1';
+    initAll();
+  }, 1500);
 })();
 
 function initParticles() {
