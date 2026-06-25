@@ -26,7 +26,7 @@ tailwind.config = {
   let labelIdx = 0;
 
   const interval = setInterval(() => {
-    progress += Math.random() * 4 + 2;
+    progress += Math.random() * 6 + 3;
     if (progress > 100) progress = 100;
     bar.style.width = progress + '%';
 
@@ -50,10 +50,27 @@ tailwind.config = {
             main.style.opacity = '1';
             initAll();
           }, 400);
-        }, 600);
-      }, 400);
+        }, 400);
+      }, 300);
     }
-  }, 40);
+  }, 25);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    splash.classList.add('hidden');
+    skeleton.classList.add('show');
+    setTimeout(() => {
+      skeleton.style.opacity = '0';
+      skeleton.style.transition = 'opacity 0.4s';
+      setTimeout(() => {
+        skeleton.classList.remove('show');
+        skeleton.style.display = 'none';
+        document.body.classList.remove('loading');
+        main.style.opacity = '1';
+        initAll();
+      }, 400);
+    }, 400);
+  }, 4000);
 })();
 
 function initParticles() {
