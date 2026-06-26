@@ -140,7 +140,7 @@ function initNavbar() {
 function initScrollProgress() {
   const bar = document.getElementById('scroll-progress');
   window.addEventListener('scroll', () => {
-    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const total = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
     bar.style.width = (window.scrollY / total * 100) + '%';
   }, { passive: true });
 }
