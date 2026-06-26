@@ -200,7 +200,13 @@ function initCountUp() {
   nums.forEach(n => obs.observe(n));
 }
 
-const CONTACT_EMAIL = 'abdulsamadzubairkamal@gmail.com';
+const EMAILJS_PUBLIC_KEY  = 'B2afaPCHJ9Tz8zUpr';
+const EMAILJS_SERVICE_ID  = 'service_4min7ud';
+const EMAILJS_TEMPLATE_ID = 'service_4min7ud';
+
+function initEmailJS() {
+  if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
 
 let toastTimer;
 function showToast(msg, type) {
@@ -214,56 +220,38 @@ function showToast(msg, type) {
   toastTimer = setTimeout(() => { t.className = ''; }, 4500);
 }
 
-window.sendEmail = async function(event) {
-  if (event) event.preventDefault();
-
-  const form    = document.getElementById('contact-form');
+window.sendEmail = function() {
   const name    = document.getElementById('cf-name').value.trim();
   const email   = document.getElementById('cf-email').value.trim();
   const subject = document.getElementById('cf-subject').value.trim();
   const message = document.getElementById('cf-message').value.trim();
   const btn     = document.getElementById('cf-btn');
 
-  if (!form || !name || !email || !subject || !message) {
-    showToast('Please fill in all fields.', 'error');
-    return;
+  if (!name || !email || !subject || !message) {
+    showToast('Please fill in all fields.', 'error'); return;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast('Please enter a valid email address.', 'error');
-    return;
+    showToast('Please enter a valid email address.', 'error'); return;
   }
 
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
-  try {
-    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email,
-        _subject: subject,
-        message,
-        _template: 'table',
-        _captcha: 'false',
-      }),
-    });
-
-    const data = await res.json();
-    if (!res.ok || String(data.success).toLowerCase() !== 'true') {
-      throw new Error(data.message || 'Send failed');
-    }
-
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    from_name: name, from_email: email, subject, message,
+  })
+  .then(() => {
     showToast("Message sent! I'll reply soon. ✨", 'success');
-    form.reset();
-  } catch (err) {
+    ['cf-name','cf-email','cf-subject','cf-message'].forEach(id => document.getElementById(id).value = '');
+  })
+  .catch(err => {
     console.error(err);
-    showToast(err.message || 'Something went wrong. Please try again.', 'error');
-  } finally {
+    showToast('Something went wrong. Please try again.', 'error');
+  })
+  .finally(() => {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
-  }
+  });
 };
 
 function initAll() {
@@ -274,4 +262,5 @@ function initAll() {
   initScrollAnimations();
   initActiveNav();
   initCountUp();
+  initEmailJS();
 }

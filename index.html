@@ -501,7 +501,7 @@
         </div>
 
         <form id="contact-form" class="card-border rounded-2xl p-8 md:p-10" style="background:#111B33"
-          onsubmit="sendEmail(event)">
+          onsubmit="event.preventDefault(); sendEmail()">
           <div class="grid sm:grid-cols-2 gap-5 mb-5">
             <div>
               <label for="cf-name"
