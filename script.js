@@ -202,7 +202,7 @@ function initCountUp() {
 
 const EMAILJS_PUBLIC_KEY  = 'B2afaPCHJ9Tz8zUpr';
 const EMAILJS_SERVICE_ID  = 'service_4min7ud';
-const EMAILJS_TEMPLATE_ID = 'service_4min7ud';
+const EMAILJS_TEMPLATE_ID = 'template_y6cgr49';
 
 function initEmailJS() {
   if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
@@ -221,11 +221,21 @@ function showToast(msg, type) {
 }
 
 window.sendEmail = function() {
+  console.log('sendEmail called');
+  
+  if (typeof emailjs === 'undefined') {
+    console.error('EmailJS not loaded');
+    showToast('Email service not loaded. Please refresh.', 'error');
+    return;
+  }
+
   const name    = document.getElementById('cf-name').value.trim();
   const email   = document.getElementById('cf-email').value.trim();
   const subject = document.getElementById('cf-subject').value.trim();
   const message = document.getElementById('cf-message').value.trim();
   const btn     = document.getElementById('cf-btn');
+
+  console.log('Form data:', { name, email, subject, message });
 
   if (!name || !email || !subject || !message) {
     showToast('Please fill in all fields.', 'error'); return;
@@ -237,15 +247,25 @@ window.sendEmail = function() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    from_name: name, from_email: email, subject, message,
-  })
-  .then(() => {
+  const templateParams = {
+    from_name: name,
+    from_email: email,
+    subject: subject,
+    message: message
+  };
+
+  console.log('Sending with params:', templateParams);
+  console.log('Service ID:', EMAILJS_SERVICE_ID);
+  console.log('Template ID:', EMAILJS_TEMPLATE_ID);
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+  .then(function(response) {
+    console.log('SUCCESS!', response.status, response.text);
     showToast("Message sent! I'll reply soon. ✨", 'success');
     ['cf-name','cf-email','cf-subject','cf-message'].forEach(id => document.getElementById(id).value = '');
   })
-  .catch(err => {
-    console.error(err);
+  .catch(function(error) {
+    console.error('FAILED...', error);
     showToast('Something went wrong. Please try again.', 'error');
   })
   .finally(() => {
