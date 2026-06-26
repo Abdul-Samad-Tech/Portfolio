@@ -263,16 +263,10 @@ body.loading { overflow: hidden; }
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  object-position: 50% 20%;
+  object-position: 50% 30%;
   display: block;
-  transform: scale(1.4);
-  transform-origin: 50% 25%;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-.avatar-wrap:hover .avatar-photo {
-  transform: scale(2.22);
+  transform: scale(1.2);
+  transform-origin: 50% 35%;
 }
 
 .avatar-overlay {
