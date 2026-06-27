@@ -5,9 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abdul Samad — Developer Portfolio</title>
-  <meta name="description" content="Abdul Samad — Beginner Full-Stack & Mobile Developer from Pakistan. Explore my projects in Flutter, Laravel, React & more.">
+  <meta name="description"
+    content="Abdul Samad — Beginner Full-Stack & Mobile Developer from Pakistan. Explore my projects in Flutter, Laravel, React & more.">
   <meta property="og:title" content="Abdul Samad — Developer Portfolio">
-  <meta property="og:description" content="A passionate beginner developer building projects across web, mobile, and backend.">
+  <meta property="og:description"
+    content="A passionate beginner developer building projects across web, mobile, and backend.">
   <meta property="og:image" content="images/PFP.jpeg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -25,11 +27,11 @@
 
 <body>
 
-    <div id="scroll-progress"></div>
+  <div id="scroll-progress"></div>
 
-    <div id="main-content">
+  <div id="main-content">
 
-        <header id="navbar">
+    <header id="navbar">
       <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
         <a href="#home" class="font-display font-700 text-lg text-white tracking-tight"
           style="font-family:'Space Grotesk'">
@@ -63,13 +65,13 @@
     </header>
 
 
-        <section id="home" class="hero-grid min-h-screen flex items-center pt-16 relative">
+    <section id="home" class="hero-grid min-h-screen flex items-center pt-16 relative">
       <canvas id="particle-canvas"></canvas>
       <div class="orb orb-1"></div>
       <div class="orb orb-2"></div>
       <div class="orb orb-3"></div>
 
-          <span class="code-deco" style="top:18%;left:4%;animation-delay:0s">&lt;div class="dev"&gt;</span>
+      <span class="code-deco" style="top:18%;left:4%;animation-delay:0s">&lt;div class="dev"&gt;</span>
       <span class="code-deco" style="top:75%;right:5%;animation-delay:-2s">const future = 'bright';</span>
       <span class="code-deco" style="top:35%;right:12%;animation-delay:-4s">@Component({})</span>
       <span class="code-deco" style="bottom:20%;left:8%;animation-delay:-1s">flutter run</span>
@@ -77,7 +79,7 @@
       <div class="max-w-6xl mx-auto px-6 w-full py-24 relative z-10">
         <div class="flex flex-col lg:flex-row items-center gap-16">
 
-              <div class="flex-1 order-2 lg:order-1">
+          <div class="flex-1 order-2 lg:order-1">
             <div class="hero-reveal">
               <p class="section-eyebrow mb-4">Hello, World! 👋</p>
             </div>
@@ -135,19 +137,12 @@
             </div>
           </div>
 
-              <div class="order-1 lg:order-2 flex-shrink-0 hero-reveal">
+          <div class="order-1 lg:order-2 flex-shrink-0 hero-reveal">
             <div class="avatar-wrap">
               <div class="avatar-ring">
                 <div class="avatar-inner">
-                  <img
-                    src="images/PFP.jpeg"
-                    alt="Abdul Samad — Developer"
-                    class="avatar-photo"
-                    width="248"
-                    height="248"
-                    loading="eager"
-                    decoding="async"
-                  />
+                  <img src="images/PFP.jpeg" alt="Abdul Samad — Developer" class="avatar-photo" width="248" height="248"
+                    loading="eager" decoding="async" />
                   <div class="avatar-overlay"></div>
                   <div class="avatar-shine"></div>
                 </div>
@@ -162,7 +157,7 @@
         </div>
       </div>
 
-          <div
+      <div
         style="position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,#0A0F1E);pointer-events:none">
       </div>
     </section>
@@ -170,7 +165,7 @@
     <div class="section-divider"></div>
 
 
-        <section id="about" class="py-28">
+    <section id="about" class="py-28">
       <div class="max-w-6xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-16 items-center">
 
@@ -278,7 +273,7 @@
     <div class="section-divider"></div>
 
 
-        <section id="skills" class="py-28 fade-in" style="background:#0D1426">
+    <section id="skills" class="py-28 fade-in" style="background:#0D1426">
       <div class="max-w-6xl mx-auto px-6">
         <div class="text-center mb-16">
           <p class="section-eyebrow mb-3">My Toolbox</p>
@@ -356,61 +351,109 @@
 
         <div class="mt-20">
           <p
-            style="font-size:0.7rem;margin-bottom:16px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">
+            style="font-size:0.7rem;margin-bottom:24px;color:#00E5FF;letter-spacing:0.18em;font-family:'Space Grotesk';text-transform:uppercase">
             Skill Proficiency</p>
-          <div class="grid md:grid-cols-2 gap-6">
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">JavaScript</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Medium</span>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-brands fa-js"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">JavaScript</h3>
+                  <span class="skill-badge medium">Medium</span>
+                </div>
               </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="60"></div>
-              </div>
-            </div>
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">PHP</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Medium</span>
-              </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="55"></div>
-              </div>
-            </div>
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">React</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Beginner</span>
-              </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="40"></div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="60"></div>
+                </div>
+                <span class="skill-percent">60%</span>
               </div>
             </div>
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">HTML</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Expert</span>
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-brands fa-php"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">PHP</h3>
+                  <span class="skill-badge medium">Medium</span>
+                </div>
               </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="85"></div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="55"></div>
+                </div>
+                <span class="skill-percent">55%</span>
               </div>
             </div>
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">Tailwind CSS</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Medium</span>
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-brands fa-react"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">React</h3>
+                  <span class="skill-badge beginner">Beginner</span>
+                </div>
               </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="65"></div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="40"></div>
+                </div>
+                <span class="skill-percent">40%</span>
               </div>
             </div>
-            <div class="skill-bar-container">
-              <div class="flex justify-between mb-2">
-                <span style="color:#F0F4FF;font-size:0.9rem;font-family:'Space Grotesk'">Flutter</span>
-                <span class="skill-level" style="color:#00E5FF;font-size:0.8rem">Beginner</span>
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-brands fa-html5"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">HTML</h3>
+                  <span class="skill-badge expert">Expert</span>
+                </div>
               </div>
-              <div class="skill-bar-bg">
-                <div class="skill-bar-fill" data-level="45"></div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="85"></div>
+                </div>
+                <span class="skill-percent">85%</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-solid fa-wind"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">Tailwind CSS</h3>
+                  <span class="skill-badge medium">Medium</span>
+                </div>
+              </div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="65"></div>
+                </div>
+                <span class="skill-percent">65%</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <div class="skill-header">
+                <div class="skill-icon">
+                  <i class="fa-brands fa-flutter"></i>
+                </div>
+                <div class="skill-info">
+                  <h3 style="color:#F0F4FF;font-size:1rem;font-family:'Space Grotesk';font-weight:600">Flutter</h3>
+                  <span class="skill-badge beginner">Beginner</span>
+                </div>
+              </div>
+              <div class="skill-progress">
+                <div class="skill-track">
+                  <div class="skill-bar" data-level="45"></div>
+                </div>
+                <span class="skill-percent">45%</span>
               </div>
             </div>
           </div>
@@ -421,7 +464,7 @@
     <div class="section-divider"></div>
 
 
-        <section id="projects" class="py-28 fade-in">
+    <section id="projects" class="py-28 fade-in">
       <div class="max-w-6xl mx-auto px-6">
         <div class="text-center mb-16">
           <p class="section-eyebrow mb-3">Portfolio</p>
@@ -561,7 +604,7 @@
     <div class="section-divider"></div>
 
 
-        <section id="contact" class="py-28 fade-in" style="background:#0D1426">
+    <section id="contact" class="py-28 fade-in" style="background:#0D1426">
       <div class="max-w-3xl mx-auto px-6">
         <div class="text-center mb-14">
           <p class="section-eyebrow mb-3">Let's Connect</p>
@@ -597,8 +640,8 @@
           <div class="mb-7">
             <label for="cf-message"
               style="display:block;font-size:0.72rem;margin-bottom:8px;font-weight:500;color:#8892A4;letter-spacing:0.06em">Message</label>
-            <textarea id="cf-message" name="message" rows="5" placeholder="Write your message here..." class="contact-input"
-              style="resize:vertical" required></textarea>
+            <textarea id="cf-message" name="message" rows="5" placeholder="Write your message here..."
+              class="contact-input" style="resize:vertical" required></textarea>
           </div>
           <button id="cf-btn" type="submit" class="btn-primary w-full justify-center py-4">
             <i class="fa-solid fa-paper-plane"></i> Send Message
@@ -626,10 +669,10 @@
     </section>
 
 
-        <div id="toast"></div>
+    <div id="toast"></div>
 
 
-        <footer class="py-8 text-center" style="border-top:1px solid rgba(0,229,255,0.07)">
+    <footer class="py-8 text-center" style="border-top:1px solid rgba(0,229,255,0.07)">
       <p style="font-size:0.875rem;color:#4A5568;font-family:'Space Grotesk'">
         Designed & Built by <span style="color:#00E5FF">Abdul Samad</span> — 2025
       </p>

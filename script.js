@@ -201,7 +201,7 @@ function initCountUp() {
 }
 
 function initSkillBars() {
-  const skillBars = document.querySelectorAll('.skill-bar-fill');
+  const skillBars = document.querySelectorAll('.skill-bar');
   const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
