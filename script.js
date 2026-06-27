@@ -200,6 +200,20 @@ function initCountUp() {
   nums.forEach(n => obs.observe(n));
 }
 
+function initSkillBars() {
+  const skillBars = document.querySelectorAll('.skill-bar-fill');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const level = entry.target.dataset.level;
+        entry.target.style.width = level + '%';
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  skillBars.forEach(bar => obs.observe(bar));
+}
+
 const EMAILJS_PUBLIC_KEY  = 'B2afaPCHJ9Tz8zUpr';
 const EMAILJS_SERVICE_ID  = 'service_4min7ud';
 const EMAILJS_TEMPLATE_ID = 'template_y6cgr49';
@@ -282,5 +296,6 @@ function initAll() {
   initScrollAnimations();
   initActiveNav();
   initCountUp();
+  initSkillBars();
   initEmailJS();
 }

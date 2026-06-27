@@ -442,3 +442,30 @@ body {
   background: linear-gradient(90deg, transparent, rgba(0,229,255,0.15), transparent);
   margin: 0;
 }
+
+.skill-bar-container {
+  background: rgba(17,27,51,0.5);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,229,255,0.08);
+}
+
+.skill-bar-bg {
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00E5FF, #0099bb);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px rgba(0,229,255,0.4);
+}
+
+.skill-bar-container:hover .skill-bar-fill {
+  box-shadow: 0 0 16px rgba(0,229,255,0.6);
+}
